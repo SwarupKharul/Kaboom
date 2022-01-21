@@ -1,0 +1,4 @@
+#Fri Jan 21 17:38:39 IST 2022
+base.0=C\:\\Users\\surya\\practice projects\\flutter\\kaboom\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
