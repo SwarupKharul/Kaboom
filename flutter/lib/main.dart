@@ -37,6 +37,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<String> _imagepaths = [" ", " ", " ", " "];
+  List<String> _dialogues = [" ", " ", " ", " "];
+  int _dialogueCounter = 0;
+  TextEditingController _controller = TextEditingController();
+
   ImagePicker _picker = ImagePicker();
 
   GlobalKey _globalKey = new GlobalKey();
@@ -75,137 +79,383 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: RepaintBoundary(
-          key: _globalKey,
-          child: Card(
-            clipBehavior: Clip.hardEdge,
-            color: Color(0xFF2B2D32),
-            child: SizedBox(
-                width: double.infinity,
-                height: 600,
-                child: LayoutBuilder(builder: (context, constraints) {
-                  return CustomPaint(
-                    painter: myPainter(),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                            top: 0,
-                            left: 0,
-                            child: ClipPath(
-                              clipper: firstImageClipper(
-                                  height: constraints.maxHeight,
-                                  width: constraints.maxWidth),
-                              child: (_imagepaths[0] == " ")
-                                  ? Container()
-                                  : Image.file(
-                                      File(_imagepaths[0]),
-                                      // color: Colors.amber,
-                                      fit: BoxFit.fill,
-                                      height: constraints.maxHeight * 0.6,
-                                      width: constraints.maxWidth * 0.6,
-                                    ),
-                            )),
-                        Positioned(
-                            top: 0,
-                            left: 0.4 * constraints.maxWidth,
-                            child: ClipPath(
-                              clipper: secondImageClipper(
-                                  height: constraints.maxHeight,
-                                  width: constraints.maxWidth),
-                              child: (_imagepaths[1] == " ")
-                                  ? Container()
-                                  : Image.file(
-                                      File(_imagepaths[1]),
-                                      fit: BoxFit.fill,
-                                      height: constraints.maxHeight * 0.48,
-                                      width: constraints.maxWidth * 0.6,
-                                    ),
-                            )),
-                        Positioned(
-                            top: 0.51 * constraints.maxHeight,
-                            left: 0,
-                            child: ClipPath(
-                              clipper: thirdImageClipper(
-                                  height: constraints.maxHeight,
-                                  width: constraints.maxWidth),
-                              child: (_imagepaths[2] == " ")
-                                  ? Container()
-                                  : Image.file(
-                                      File(_imagepaths[2]),
-                                      fit: BoxFit.fill,
-                                      height: constraints.maxHeight * 0.49,
-                                      width: constraints.maxWidth * 0.45,
-                                    ),
-                            )),
-                        Positioned(
-                            top: 0.4 * constraints.maxHeight,
-                            left: 0.35 * constraints.maxWidth,
-                            child: ClipPath(
-                              clipper: fourthImageClipper(
-                                  height: constraints.maxHeight,
-                                  width: constraints.maxWidth),
-                              child: (_imagepaths[3] == " ")
-                                  ? Container()
-                                  : Image.file(
-                                      File(_imagepaths[3]),
-                                      fit: BoxFit.fill,
-                                      height: constraints.maxHeight * 0.6,
-                                      width: constraints.maxWidth * 0.65,
-                                    ),
-                            )),
-                        Positioned(
-                            top: constraints.maxHeight * 0.25,
-                            left: constraints.maxWidth * 0.25,
-                            child: IconButton(
-                              icon: Icon(Icons.add_circle, color: Colors.amber),
-                              onPressed: () async {
-                                await addImage(0);
-                                setState(() {});
-                              },
-                            )),
-                        Positioned(
-                            top: constraints.maxHeight * 0.20,
-                            left: constraints.maxWidth * 0.70,
-                            child: IconButton(
-                              icon: Icon(Icons.add_circle, color: Colors.amber),
-                              onPressed: () async {
-                                await addImage(1);
-                                setState(() {});
-                              },
-                            )),
-                        Positioned(
-                            top: constraints.maxHeight * 0.75,
-                            left: constraints.maxWidth * 0.15,
-                            child: IconButton(
-                              icon: Icon(Icons.add_circle, color: Colors.amber),
-                              onPressed: () async {
-                                await addImage(2);
-                                setState(() {});
-                              },
-                            )),
-                        Positioned(
-                            top: constraints.maxHeight * 0.70,
-                            left: constraints.maxWidth * 0.65,
-                            child: IconButton(
-                              icon: Icon(Icons.add_circle, color: Colors.amber),
-                              onPressed: () async {
-                                await addImage(3);
-                                setState(() {});
-                              },
-                            )),
-                      ],
-                    ),
-                  );
-                })),
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: RepaintBoundary(
+              key: _globalKey,
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                color: Color(0xFF2B2D32),
+                child: SizedBox(
+                    width: double.infinity,
+                    height: 600,
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return CustomPaint(
+                        painter: myPainter(),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                                top: 0,
+                                left: 0,
+                                child: ClipPath(
+                                  clipper: firstImageClipper(
+                                      height: constraints.maxHeight,
+                                      width: constraints.maxWidth),
+                                  child: (_imagepaths[0] == " ")
+                                      ? Container()
+                                      : Stack(
+                                          children: [
+                                            Image.file(
+                                              File(_imagepaths[0]),
+                                              // color: Colors.amber,
+                                              fit: BoxFit.cover,
+                                              height:
+                                                  constraints.maxHeight * 0.6,
+                                              width: constraints.maxWidth * 0.6,
+                                            ),
+                                            if (_dialogues[0] != " ")
+                                              Positioned(
+                                                  top: 0,
+                                                  child: Card(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  10),
+                                                            ),
+                                                            side: BorderSide(
+                                                                width: 5)),
+                                                    child: Container(
+                                                      //height: 100,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
+                                                        child:
+                                                            Text(_dialogues[0]),
+                                                      ),
+                                                      width:
+                                                          constraints.maxWidth *
+                                                              0.4,
+                                                    ),
+                                                  ))
+                                          ],
+                                        ),
+                                )),
+                            Positioned(
+                                top: 0,
+                                left: 0.4 * constraints.maxWidth,
+                                child: ClipPath(
+                                  clipper: secondImageClipper(
+                                      height: constraints.maxHeight,
+                                      width: constraints.maxWidth),
+                                  child: (_imagepaths[1] == " ")
+                                      ? Container()
+                                      : Stack(
+                                          children: [
+                                            Image.file(
+                                              File(_imagepaths[1]),
+                                              fit: BoxFit.cover,
+                                              height:
+                                                  constraints.maxHeight * 0.48,
+                                              width: constraints.maxWidth * 0.6,
+                                            ),
+                                            if (_dialogues[1] != " ")
+                                              Positioned(
+                                                  bottom: 50,
+                                                  right: 0,
+                                                  child: Card(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  10),
+                                                            ),
+                                                            side: BorderSide(
+                                                                width: 5)),
+                                                    child: Container(
+                                                      //height: 100,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
+                                                        child:
+                                                            Text(_dialogues[1]),
+                                                      ),
+                                                      width:
+                                                          constraints.maxWidth *
+                                                              0.4,
+                                                    ),
+                                                  ))
+                                          ],
+                                        ),
+                                )),
+                            Positioned(
+                                top: 0.51 * constraints.maxHeight,
+                                left: 0,
+                                child: ClipPath(
+                                  clipper: thirdImageClipper(
+                                      height: constraints.maxHeight,
+                                      width: constraints.maxWidth),
+                                  child: (_imagepaths[2] == " ")
+                                      ? Container()
+                                      : Stack(
+                                          children: [
+                                            Image.file(
+                                              File(_imagepaths[2]),
+                                              fit: BoxFit.cover,
+                                              height:
+                                                  constraints.maxHeight * 0.49,
+                                              width:
+                                                  constraints.maxWidth * 0.45,
+                                            ),
+                                            if (_dialogues[2] != " ")
+                                              Positioned(
+                                                  top: 30,
+                                                  right: 0,
+                                                  child: Card(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  10),
+                                                            ),
+                                                            side: BorderSide(
+                                                                width: 5)),
+                                                    child: Container(
+                                                      //height: 100,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
+                                                        child:
+                                                            Text(_dialogues[2]),
+                                                      ),
+                                                      width:
+                                                          constraints.maxWidth *
+                                                              0.3,
+                                                    ),
+                                                  ))
+                                          ],
+                                        ),
+                                )),
+                            Positioned(
+                                top: 0.4 * constraints.maxHeight,
+                                left: 0.35 * constraints.maxWidth,
+                                child: ClipPath(
+                                  clipper: fourthImageClipper(
+                                      height: constraints.maxHeight,
+                                      width: constraints.maxWidth),
+                                  child: (_imagepaths[3] == " ")
+                                      ? Container()
+                                      : Stack(
+                                          children: [
+                                            Image.file(
+                                              File(_imagepaths[3]),
+                                              fit: BoxFit.cover,
+                                              height:
+                                                  constraints.maxHeight * 0.6,
+                                              width:
+                                                  constraints.maxWidth * 0.65,
+                                            ),
+                                            if (_dialogues[3] != " ")
+                                              Positioned(
+                                                  bottom: 0,
+                                                  child: Card(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  10),
+                                                            ),
+                                                            side: BorderSide(
+                                                                width: 5)),
+                                                    child: Container(
+                                                      //height: 100,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
+                                                        child:
+                                                            Text(_dialogues[3]),
+                                                      ),
+                                                      width:
+                                                          constraints.maxWidth *
+                                                              0.65,
+                                                    ),
+                                                  ))
+                                          ],
+                                        ),
+                                )),
+                            Positioned(
+                                top: constraints.maxHeight * 0.25,
+                                left: constraints.maxWidth * 0.25,
+                                child: IconButton(
+                                  icon: Icon(Icons.add_circle,
+                                      color: Colors.amber),
+                                  onPressed: () async {
+                                    await addImage(0);
+                                    setState(() {});
+                                  },
+                                )),
+                            Positioned(
+                                top: constraints.maxHeight * 0.20,
+                                left: constraints.maxWidth * 0.70,
+                                child: IconButton(
+                                  icon: Icon(Icons.add_circle,
+                                      color: Colors.amber),
+                                  onPressed: () async {
+                                    await addImage(1);
+                                    setState(() {});
+                                  },
+                                )),
+                            Positioned(
+                                top: constraints.maxHeight * 0.75,
+                                left: constraints.maxWidth * 0.15,
+                                child: IconButton(
+                                  icon: Icon(Icons.add_circle,
+                                      color: Colors.amber),
+                                  onPressed: () async {
+                                    await addImage(2);
+                                    setState(() {});
+                                  },
+                                )),
+                            Positioned(
+                                top: constraints.maxHeight * 0.70,
+                                left: constraints.maxWidth * 0.65,
+                                child: IconButton(
+                                  icon: Icon(Icons.add_circle,
+                                      color: Colors.amber),
+                                  onPressed: () async {
+                                    await addImage(3);
+                                    setState(() {});
+                                  },
+                                )),
+                          ],
+                        ),
+                      );
+                    })),
+              ),
+            ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _capturePng,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Card(
+                color: Color(0xFF2B2D32),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.layers,
+                                color: Colors.white,
+                              )),
+                          Text(
+                            "Layout",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      height: 500,
+                                      color: Color(0xFF2B2D32),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text("Enter Text",
+                                                  style: TextStyle(
+                                                      color: Colors.white)),
+                                            ),
+                                            TextField(
+                                              controller: _controller,
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ElevatedButton(
+                                                    onPressed: () {
+                                                      _dialogues[
+                                                              _dialogueCounter] =
+                                                          _controller.text;
+                                                      _controller.text = "";
+                                                      _dialogueCounter += 1;
+                                                      _dialogueCounter %= 4;
+                                                      setState(() {});
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .amber)),
+                                                    child: Text(
+                                                      "Done",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    )),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              icon: Icon(
+                                Icons.text_format,
+                                color: Colors.white,
+                              )),
+                          Text(
+                            "Text",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ))
+        ],
       ),
     );
   }
@@ -286,7 +536,7 @@ class thirdImageClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.moveTo(0, 5 + 0.6 * height - 0.51 * height);
-    path.lineTo(size.width - 5, 0);
+    path.lineTo(size.width - 5, 5);
     path.lineTo(width * 0.35 - 5, size.height);
     path.lineTo(0, size.height);
     path.close();
