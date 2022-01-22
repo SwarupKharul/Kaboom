@@ -20,6 +20,9 @@ class _CreateComicState extends State<CreateComic> {
   List<String> _dialogues = [" ", " ", " ", " "];
   int _dialogueCounter = 0;
   TextEditingController _controller = TextEditingController();
+  TextEditingController _namecontroller = TextEditingController();
+  TextEditingController _titlecontroller = TextEditingController();
+  TextEditingController _pricecontroller = TextEditingController();
   bool _busy = false;
 
   ImageService _image = ImageService();
@@ -60,6 +63,64 @@ class _CreateComicState extends State<CreateComic> {
       print(e);
     }
     throw Exception("Error saving file");
+  }
+
+  void _publish() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            color: Color(0xFF2B2D32),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _namecontroller,
+                        decoration: InputDecoration(
+                            labelText: "Creator's Name",
+                            labelStyle: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _titlecontroller,
+                        decoration: InputDecoration(
+                            labelText: "Comic Title",
+                            labelStyle: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _pricecontroller,
+                        decoration: InputDecoration(
+                            labelText: "Price",
+                            labelStyle: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  ElevatedButton(
+                      onPressed: () {
+                        //call function here
+                        Navigator.of(context).pop();
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.amber)),
+                      child: Text(
+                        "Done",
+                        style: TextStyle(color: Colors.white),
+                      ))
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -450,7 +511,9 @@ class _CreateComicState extends State<CreateComic> {
                     Column(
                       children: [
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _publish();
+                            },
                             icon: Icon(
                               Icons.arrow_forward_rounded,
                               color: Colors.amber,
