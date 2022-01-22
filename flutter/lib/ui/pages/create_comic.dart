@@ -34,7 +34,7 @@ class _CreateComicState extends State<CreateComic> {
   GlobalKey _globalKey = new GlobalKey();
 
   var web3 = Web3Service();
-  var ipfs = IPFS.instance;
+  var ipfs = IPFS();
 
   Future<void> addImage(int index) async {
     setState(() {
@@ -76,10 +76,9 @@ class _CreateComicState extends State<CreateComic> {
   }
 
   // fetch all items by fetchMyNFTs
-  Future<String?> createMarketItem({required double price}) async {
-    final nftToken = await web3.createToken(
-        tokenURI:
-            "https://ipfs.infura.io/ipfs/QmSwPW9hEP6RtwoMZ1bz6CqnBwR6aa244RzNL7cPoD5gYW");
+  Future<String?> createMarketItem(
+      {required double price, required String ipfsHash}) async {
+    final nftToken = await web3.createToken(tokenURI: ipfsHash);
     web3.nft.transferEvents().toString();
     getTokenId();
     print("tokenId: $tokenId");
@@ -141,15 +140,28 @@ class _CreateComicState extends State<CreateComic> {
                       )),
                   ElevatedButton(
                       onPressed: () async {
-                        createMarketItem(
-                            price: double.parse(_pricecontroller.text));
                         var bytes = await _capturePng();
-                        ipfs.add(
-                            bytes,
-                            _namecontroller.text,
-                            int.parse(_pricecontroller.text),
-                            _titlecontroller.text);
+                        var res = await ipfs.addData(
+                          bytes,
+                          int.parse(_pricecontroller.text),
+                          _titlecontroller.text,
+                          _namecontroller.text,
+                        );
+                        // print(res);
+                        createMarketItem(
+                            price: double.parse(
+                              _pricecontroller.text,
+                            ),
+                            ipfsHash: res['Hash']);
 
+                        // ipfs.add(
+                        //     bytes,
+                        //     _namecontroller.text,
+                        //     int.parse(_pricecontroller.text),
+                        //     _titlecontroller.text);
+                        ipfs.download(
+                            "QmeAGqKQ5k2BS6x7rjAkChF1Z6ESoF2XxxWTeYkZhBz2Mu",
+                            "suryaaa.png");
                         Navigator.of(context).pop();
                       },
                       style: ButtonStyle(
