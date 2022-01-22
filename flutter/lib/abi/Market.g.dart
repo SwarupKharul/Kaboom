@@ -42,7 +42,7 @@ class Market extends _i1.GeneratedContract {
   /// The optional [atBlock] parameter can be used to view historical data. When
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
-  Future<List<dynamic>> fetchItemsCreated({_i1.BlockNum? atBlock}) async {
+  Future<List<dynamic>> fetchItemsCreated(_i1.EthereumAddress address, {_i1.BlockNum? atBlock}) async {
     final function = self.abi.functions[3];
     assert(checkSignature(function, 'f064c32e'));
     final params = [];
@@ -64,7 +64,7 @@ class Market extends _i1.GeneratedContract {
   /// The optional [atBlock] parameter can be used to view historical data. When
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
-  Future<List<dynamic>> fetchMyNFTs({_i1.BlockNum? atBlock}) async {
+  Future<List<dynamic>> fetchMyNFTs(_i1.EthereumAddress address, {_i1.BlockNum? atBlock}) async {
     final function = self.abi.functions[5];
     assert(checkSignature(function, '202e3740'));
     final params = [];

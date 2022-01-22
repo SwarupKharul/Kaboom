@@ -64,4 +64,34 @@ class Web3Service {
     );
     return txHash;
   }
+
+  Future<String> buyNft({required BigInt itemId, required BigInt price}) async {
+    final txHash = await market.createMarketSale(
+      nftContractAddress,
+      itemId,
+      credentials: credentials,
+      transaction: Transaction(
+        value: EtherAmount.fromUnitAndValue(EtherUnit.wei, price),
+      ),
+    );
+    return txHash;
+  }
+
+  Future<List<dynamic>> getUserCreatedItems() async {
+    final address = await credentials.extractAddress();
+    final result = await market.fetchItemsCreated(address);
+    return result;
+  }
+
+  Future<List<dynamic>> getUserOwnedItems() async {
+    final address = await credentials.extractAddress();
+    final result = await market.fetchMyNFTs(address);
+    return result;
+  }
+
+  Future<List<dynamic>> getMarketItems() async {
+    final result = await market.fetchMarketItems();
+    print(result);
+    return result;
+  }
 }
