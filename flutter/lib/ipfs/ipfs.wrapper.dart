@@ -9,12 +9,12 @@ class IPFS {
   late HttpClient httpClient = new HttpClient();
 
   IPFS._() {
-    url = "http://127.0.0.1:5001";
+    url = "https://ipfs.infura.io:5001";
   }
   static IPFS instance = IPFS._();
 
   Future<dynamic> add(
-      String path, String fileName, int price, String title) async {
+      List<int> path, String fileName, int price, String title) async {
     Map<String, String> headers = <String, String>{
       "Content-Disposition": 'form-data; name="file"; filename="$fileName"',
       "Content-Type": "application/octet-stream"
@@ -25,10 +25,11 @@ class IPFS {
     request.headers.addAll(headers);
     request.fields['price'] = price as String;
     request.fields['title'] = title;
-    request.files.add(await http.MultipartFile.fromPath(
-      'path',
-      '$path',
-    ));
+    request.files.add(http.MultipartFile.fromBytes('path', path));
+    // request.files.add(await http.MultipartFile.fromPath(
+    //   'path',
+    //   '$path',
+    // ));
     var response = await request.send();
     final respStr = await response.stream.bytesToString();
     return (jsonDecode(respStr));
@@ -38,7 +39,8 @@ class IPFS {
     final queryParameters = {
       'arg': hash,
     };
-    final uri = Uri.http("127.0.0.1:5001", '/api/v0/get/', queryParameters);
+    final uri = Uri.http(
+        "https://ipfs.infura.io:5001", '/api/v0/get/', queryParameters);
 
     http.Client client = new http.Client();
     final req = await client.get(uri);

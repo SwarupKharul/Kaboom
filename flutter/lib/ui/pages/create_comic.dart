@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaboom/core/services/imageService.dart';
+import 'package:kaboom/services/web3.dart';
+import 'package:kaboom/ipfs/ipfs.wrapper.dart';
 
 class CreateComic extends StatefulWidget {
   const CreateComic({Key? key}) : super(key: key);
@@ -30,6 +32,9 @@ class _CreateComicState extends State<CreateComic> {
   ImagePicker _picker = ImagePicker();
 
   GlobalKey _globalKey = new GlobalKey();
+
+  var web3 = Web3Service();
+  var ipfs = IPFS.instance;
 
   Future<void> addImage(int index) async {
     setState(() {
@@ -63,6 +68,36 @@ class _CreateComicState extends State<CreateComic> {
       print(e);
     }
     throw Exception("Error saving file");
+  }
+
+  BigInt? tokenId;
+  BigInt? getTokenId() {
+    return tokenId;
+  }
+
+  // fetch all items by fetchMyNFTs
+  Future<String?> createMarketItem({required double price}) async {
+    final nftToken = await web3.createToken(
+        tokenURI:
+            "https://ipfs.infura.io/ipfs/QmSwPW9hEP6RtwoMZ1bz6CqnBwR6aa244RzNL7cPoD5gYW");
+    web3.nft.transferEvents().toString();
+    getTokenId();
+    print("tokenId: $tokenId");
+    final marketItem = await web3.createMarketItem(
+        tokenId: tokenId!, price: BigInt.from(price));
+
+    print('createMarketItem $marketItem');
+    return marketItem;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    web3.nft.transferEvents().listen((event) {
+      setState(() {
+        tokenId = event.tokenId;
+      });
+    });
   }
 
   void _publish() {
@@ -105,8 +140,16 @@ class _CreateComicState extends State<CreateComic> {
                         style: TextStyle(color: Colors.white),
                       )),
                   ElevatedButton(
-                      onPressed: () {
-                        //call function here
+                      onPressed: () async {
+                        createMarketItem(
+                            price: double.parse(_pricecontroller.text));
+                        var bytes = await _capturePng();
+                        ipfs.add(
+                            bytes,
+                            _namecontroller.text,
+                            int.parse(_pricecontroller.text),
+                            _titlecontroller.text);
+
                         Navigator.of(context).pop();
                       },
                       style: ButtonStyle(
