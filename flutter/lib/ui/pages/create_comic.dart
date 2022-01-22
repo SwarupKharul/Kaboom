@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaboom/core/services/imageService.dart';
+import 'package:kaboom/services/web3.dart';
+import 'package:kaboom/ipfs/ipfs.wrapper.dart';
 
 class CreateComic extends StatefulWidget {
   const CreateComic({Key? key}) : super(key: key);
@@ -20,6 +22,9 @@ class _CreateComicState extends State<CreateComic> {
   List<String> _dialogues = [" ", " ", " ", " "];
   int _dialogueCounter = 0;
   TextEditingController _controller = TextEditingController();
+  TextEditingController _namecontroller = TextEditingController();
+  TextEditingController _titlecontroller = TextEditingController();
+  TextEditingController _pricecontroller = TextEditingController();
   bool _busy = false;
 
   ImageService _image = ImageService();
@@ -27,6 +32,9 @@ class _CreateComicState extends State<CreateComic> {
   ImagePicker _picker = ImagePicker();
 
   GlobalKey _globalKey = new GlobalKey();
+
+  var web3 = Web3Service();
+  var ipfs = IPFS();
 
   Future<void> addImage(int index) async {
     setState(() {
@@ -60,6 +68,112 @@ class _CreateComicState extends State<CreateComic> {
       print(e);
     }
     throw Exception("Error saving file");
+  }
+
+  BigInt? tokenId;
+  BigInt? getTokenId() {
+    return tokenId;
+  }
+
+  // fetch all items by fetchMyNFTs
+  Future<String?> createMarketItem(
+      {required double price, required String ipfsHash}) async {
+    final nftToken = await web3.createToken(tokenURI: ipfsHash);
+    web3.nft.transferEvents().toString();
+    getTokenId();
+    print("tokenId: $tokenId");
+    final marketItem = await web3.createMarketItem(
+        tokenId: tokenId!, price: BigInt.from(price));
+
+    print('createMarketItem $marketItem');
+    return marketItem;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    web3.nft.transferEvents().listen((event) {
+      setState(() {
+        tokenId = event.tokenId;
+      });
+    });
+  }
+
+  void _publish() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            color: Color(0xFF2B2D32),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _namecontroller,
+                        decoration: InputDecoration(
+                            labelText: "Creator's Name",
+                            labelStyle: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _titlecontroller,
+                        decoration: InputDecoration(
+                            labelText: "Comic Title",
+                            labelStyle: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _pricecontroller,
+                        decoration: InputDecoration(
+                            labelText: "Price",
+                            labelStyle: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  ElevatedButton(
+                      onPressed: () async {
+                        var bytes = await _capturePng();
+                        var res = await ipfs.addData(
+                          bytes,
+                          int.parse(_pricecontroller.text),
+                          _titlecontroller.text,
+                          _namecontroller.text,
+                        );
+                        // print(res);
+                        createMarketItem(
+                            price: double.parse(
+                              _pricecontroller.text,
+                            ),
+                            ipfsHash: res['Hash']);
+
+                        // ipfs.add(
+                        //     bytes,
+                        //     _namecontroller.text,
+                        //     int.parse(_pricecontroller.text),
+                        //     _titlecontroller.text);
+                        
+                        Navigator.of(context).pop();
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.amber)),
+                      child: Text(
+                        "Done",
+                        style: TextStyle(color: Colors.white),
+                      ))
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -450,7 +564,9 @@ class _CreateComicState extends State<CreateComic> {
                     Column(
                       children: [
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _publish();
+                            },
                             icon: Icon(
                               Icons.arrow_forward_rounded,
                               color: Colors.amber,
