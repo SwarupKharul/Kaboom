@@ -5,9 +5,11 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaboom/core/services/imageService.dart';
 import 'package:kaboom/ui/pages/create_comic.dart';
+import 'package:kaboom/ui/pages/create_comic2.dart';
 import 'package:kaboom/ui/pages/feed.dart';
 
 void main() {
@@ -22,7 +24,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.comicNeueTextTheme(Theme.of(context).textTheme),
+        primarySwatch: Colors.amber,
       ),
       home: const MyHomePage(),
     );
@@ -135,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: _controller,
         children: [
           Feed(),
-          CreateComic(),
+          CreateComic2(),
           Center(child: Text("prof")),
         ],
       ),
