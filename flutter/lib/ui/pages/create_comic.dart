@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kaboom/core/services/imageService.dart';
 
 class CreateComic extends StatefulWidget {
   const CreateComic({Key? key}) : super(key: key);
@@ -19,16 +20,26 @@ class _CreateComicState extends State<CreateComic> {
   List<String> _dialogues = [" ", " ", " ", " "];
   int _dialogueCounter = 0;
   TextEditingController _controller = TextEditingController();
+  bool _busy = false;
+
+  ImageService _image = ImageService();
 
   ImagePicker _picker = ImagePicker();
 
   GlobalKey _globalKey = new GlobalKey();
 
   Future<void> addImage(int index) async {
+    setState(() {
+      _busy = true;
+    });
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      _imagepaths[index] = image.path;
+      String path = await _image.cartoonify_image(File(image.path));
+      _imagepaths[index] = path;
     }
+    setState(() {
+      _busy = false;
+    });
   }
 
   Future<Uint8List> _capturePng() async {
@@ -82,8 +93,8 @@ class _CreateComicState extends State<CreateComic> {
                                       ? Container()
                                       : Stack(
                                           children: [
-                                            Image.file(
-                                              File(_imagepaths[0]),
+                                            Image.network(
+                                              _imagepaths[0],
                                               // color: Colors.amber,
                                               fit: BoxFit.cover,
                                               height:
@@ -134,8 +145,8 @@ class _CreateComicState extends State<CreateComic> {
                                       ? Container()
                                       : Stack(
                                           children: [
-                                            Image.file(
-                                              File(_imagepaths[1]),
+                                            Image.network(
+                                              _imagepaths[1],
                                               fit: BoxFit.cover,
                                               height:
                                                   constraints.maxHeight * 0.48,
@@ -186,8 +197,8 @@ class _CreateComicState extends State<CreateComic> {
                                       ? Container()
                                       : Stack(
                                           children: [
-                                            Image.file(
-                                              File(_imagepaths[2]),
+                                            Image.network(
+                                              _imagepaths[2],
                                               fit: BoxFit.cover,
                                               height:
                                                   constraints.maxHeight * 0.49,
@@ -239,8 +250,8 @@ class _CreateComicState extends State<CreateComic> {
                                       ? Container()
                                       : Stack(
                                           children: [
-                                            Image.file(
-                                              File(_imagepaths[3]),
+                                            Image.network(
+                                              _imagepaths[3],
                                               fit: BoxFit.cover,
                                               height:
                                                   constraints.maxHeight * 0.6,
@@ -280,50 +291,61 @@ class _CreateComicState extends State<CreateComic> {
                                           ],
                                         ),
                                 )),
-                            Positioned(
-                                top: constraints.maxHeight * 0.25,
-                                left: constraints.maxWidth * 0.25,
-                                child: IconButton(
-                                  icon: Icon(Icons.add_circle,
-                                      color: Colors.amber),
-                                  onPressed: () async {
-                                    await addImage(0);
-                                    setState(() {});
-                                  },
-                                )),
-                            Positioned(
-                                top: constraints.maxHeight * 0.20,
-                                left: constraints.maxWidth * 0.70,
-                                child: IconButton(
-                                  icon: Icon(Icons.add_circle,
-                                      color: Colors.amber),
-                                  onPressed: () async {
-                                    await addImage(1);
-                                    setState(() {});
-                                  },
-                                )),
-                            Positioned(
-                                top: constraints.maxHeight * 0.75,
-                                left: constraints.maxWidth * 0.15,
-                                child: IconButton(
-                                  icon: Icon(Icons.add_circle,
-                                      color: Colors.amber),
-                                  onPressed: () async {
-                                    await addImage(2);
-                                    setState(() {});
-                                  },
-                                )),
-                            Positioned(
-                                top: constraints.maxHeight * 0.70,
-                                left: constraints.maxWidth * 0.65,
-                                child: IconButton(
-                                  icon: Icon(Icons.add_circle,
-                                      color: Colors.amber),
-                                  onPressed: () async {
-                                    await addImage(3);
-                                    setState(() {});
-                                  },
-                                )),
+                            if (_imagepaths[0] == " ")
+                              Positioned(
+                                  top: constraints.maxHeight * 0.25,
+                                  left: constraints.maxWidth * 0.25,
+                                  child: IconButton(
+                                    icon: Icon(Icons.add_circle,
+                                        color: Colors.amber),
+                                    onPressed: () async {
+                                      await addImage(0);
+                                      setState(() {});
+                                    },
+                                  )),
+                            if (_imagepaths[1] == " ")
+                              Positioned(
+                                  top: constraints.maxHeight * 0.20,
+                                  left: constraints.maxWidth * 0.70,
+                                  child: IconButton(
+                                    icon: Icon(Icons.add_circle,
+                                        color: Colors.amber),
+                                    onPressed: () async {
+                                      await addImage(1);
+                                      setState(() {});
+                                    },
+                                  )),
+                            if (_imagepaths[2] == " ")
+                              Positioned(
+                                  top: constraints.maxHeight * 0.75,
+                                  left: constraints.maxWidth * 0.15,
+                                  child: IconButton(
+                                    icon: Icon(Icons.add_circle,
+                                        color: Colors.amber),
+                                    onPressed: () async {
+                                      await addImage(2);
+                                      setState(() {});
+                                    },
+                                  )),
+                            if (_imagepaths[3] == " ")
+                              Positioned(
+                                  top: constraints.maxHeight * 0.70,
+                                  left: constraints.maxWidth * 0.65,
+                                  child: IconButton(
+                                    icon: Icon(Icons.add_circle,
+                                        color: Colors.amber),
+                                    onPressed: () async {
+                                      await addImage(3);
+                                      setState(() {});
+                                    },
+                                  )),
+                            if (_busy == true)
+                              Positioned(
+                                  top: constraints.maxHeight / 2,
+                                  left: constraints.maxWidth / 2,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.amber,
+                                  ))
                           ],
                         ),
                       );

@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kaboom/core/services/imageService.dart';
 import 'package:kaboom/ui/pages/create_comic.dart';
 import 'package:kaboom/ui/pages/feed.dart';
 
@@ -37,6 +38,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   PageController _controller = PageController(initialPage: 0);
+
   int _index = 0;
 
   @override
