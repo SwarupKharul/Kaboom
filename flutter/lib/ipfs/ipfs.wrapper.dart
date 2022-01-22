@@ -55,24 +55,4 @@ class IPFS {
     print(respStr);
     return jsonDecode(respStr);
   }
-
-  Future<void> download(String hash, String fileName) async {
-    final queryParameters = {
-      'arg': hash,
-    };
-    final uri =
-        Uri.https("ipfs.infura.io:5001", '/api/v0/get', queryParameters);
-    print(uri);
-
-    http.Client client = new http.Client();
-    final req = await client.get(uri);
-    final bytes = req.bodyBytes;
-    // extract data from response
-    // String dir = (await getApplicationDocumentsDirectory()).path;
-    //File file = File('$dir/$fileName');
-    // await file.writeAsBytes(bytes);
-    // print(file);
-    print("downloaded");
-    //return file;
-  }
 }

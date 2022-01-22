@@ -159,9 +159,7 @@ class _CreateComicState extends State<CreateComic> {
                         //     _namecontroller.text,
                         //     int.parse(_pricecontroller.text),
                         //     _titlecontroller.text);
-                        ipfs.download(
-                            "QmeAGqKQ5k2BS6x7rjAkChF1Z6ESoF2XxxWTeYkZhBz2Mu",
-                            "suryaaa.png");
+                        
                         Navigator.of(context).pop();
                       },
                       style: ButtonStyle(
