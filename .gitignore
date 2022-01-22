@@ -9,3 +9,7 @@ typechain
 #Hardhat files
 cache
 artifacts
+
+#flutter files
+flutter/build/
+
