@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:kaboom/core/models/post.dart';
 import 'package:kaboom/services/web3.dart';
+import 'package:web3dart/web3dart.dart';
 
 var web3 = Web3Service();
 
@@ -36,11 +37,15 @@ class _FeedState extends State<Feed> {
   //   return frame.image.toByteData(format: Imag);
   // }
 
-  Widget post(
-      {required String name,
-      required String title,
-      required String price,
-      required String img}) {
+  Widget post({
+    required String name,
+    required String title,
+    required String price,
+    required String img,
+    required BigInt itemId,
+    required int index,
+    // required bool like,
+  }) {
     return Container(
       margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
       child: Column(
@@ -106,16 +111,20 @@ class _FeedState extends State<Feed> {
                     child: new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        
-                            new IconButton(
-                              icon: Icon(Icons.favorite_border),
-                              color: Color(0xFFFFFFFF),
-                              onPressed: () {},
-                            ),
-                            
+                        new IconButton(
+                          icon: Icon(Icons.favorite_border),
+                          color: Color(0xFFFFFFFF),
+                          onPressed: () {},
+                        ),
                         ElevatedButton(
                           onPressed: () {
-                            //  getFeed();
+                            web3.buyNft(
+                                itemId: itemId,
+                                price: BigInt.from(int.parse(price)));
+                            Future.delayed(Duration(seconds: 3)).then((value) {
+                              _posts.removeAt(index);
+                              setState(() {});
+                            });
                           },
                           child: Text("Buy ${price}"),
                           style: ButtonStyle(
@@ -139,10 +148,13 @@ class _FeedState extends State<Feed> {
     return ListView.builder(
       itemCount: _posts.length,
       itemBuilder: (context, index) => post(
-          name: _posts[index].name,
-          price: _posts[index].price,
-          img: _posts[index].img,
-          title: _posts[index].title),
+        name: _posts[index].name,
+        price: _posts[index].price,
+        img: _posts[index].img,
+        title: _posts[index].title,
+        itemId: _posts[index].itemId,
+        index: index,
+      ),
     );
   }
 }

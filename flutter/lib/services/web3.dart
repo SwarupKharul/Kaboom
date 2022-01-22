@@ -74,14 +74,12 @@ class Web3Service {
   }
 
   Future<String> buyNft({required BigInt itemId, required BigInt price}) async {
-    final txHash = await market.createMarketSale(
-      nftContractAddress,
-      itemId,
-      credentials: credentials,
-      transaction: Transaction(
-        value: EtherAmount.fromUnitAndValue(EtherUnit.wei, price),
-      ),
-    );
+    final txHash = await market.createMarketSale(nftContractAddress, itemId,
+        credentials: credentials,
+        transaction: Transaction(
+          value: EtherAmount.fromUnitAndValue(EtherUnit.ether, price),
+          //gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0),
+        ));
     return txHash;
   }
 
