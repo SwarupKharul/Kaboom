@@ -6,6 +6,9 @@ coverage
 coverage.json
 typechain
 config.js
+.secret
+.vscode
+
 
 #Hardhat files
 cache
