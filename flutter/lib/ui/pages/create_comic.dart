@@ -79,6 +79,7 @@ class _CreateComicState extends State<CreateComic> {
   // fetch all items by fetchMyNFTs
   Future<String?> createMarketItem(
       {required double price, required String ipfsHash}) async {
+        
     final nftToken = await web3.createToken(tokenURI: ipfsHash);
     web3.nft.transferEvents().toString();
     getTokenId();
