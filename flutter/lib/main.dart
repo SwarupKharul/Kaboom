@@ -10,6 +10,7 @@ import 'package:kaboom/core/services/imageService.dart';
 import 'package:kaboom/ui/pages/create_comic.dart';
 import 'package:kaboom/ui/pages/create_comic2.dart';
 import 'package:kaboom/ui/pages/feed.dart';
+import 'package:kaboom/ui/pages/sec.dart';
 
 void main() {
   runApp(const MyApp());
@@ -150,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Feed(),
           _create[_currentCreate],
-          Center(child: Text("prof")),
+          second(),
         ],
       ),
       bottomNavigationBar: _bottomNavBar(_index),
