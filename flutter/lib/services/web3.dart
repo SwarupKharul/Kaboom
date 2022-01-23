@@ -12,7 +12,7 @@ var ipfs = IPFS();
 class Web3Service {
   late Client httpClient;
   late Web3Client ethClient;
-  String rpcUrl = 'http://10.0.2.2:8545/';
+  String rpcUrl = 'http://10.0.2.2:8545';
   String nftStorageUrl = 'ipfs.dweb.link/';
 
   final marketContractAddress =
@@ -23,7 +23,7 @@ class Web3Service {
   late Market market;
   late NFT nft;
   late Credentials credentials = EthPrivateKey.fromHex(
-      "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d");
+      "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba");
 
   Web3Service() {
     httpClient = Client();
@@ -83,10 +83,38 @@ class Web3Service {
     return txHash;
   }
 
-  Future<List<dynamic>> getUserCreatedItems() async {
+  Future<List<Post>> getUserCreatedItems() async {
+    final List<dynamic> items = [];
+    final List<Post> posts = [];
     final address = await credentials.extractAddress();
+    print('address: $address');
     final result = await market.fetchItemsCreated(address);
-    return result;
+    print('result: $result');
+    for (var item in result) {
+      items.add({
+        "itemId": item[0],
+        "tokenId": item[2],
+      });
+    }
+
+    for (var item in items) {
+      final metaUri = await getTokenUri(item['tokenId']);
+      print("metaUri: $metaUri");
+      final metaData = await getTokenMetadata(tokenURI: metaUri);
+      print("metaData: $metaData");
+      var data = jsonDecode(
+        metaData.toString(),
+      );
+      print("Data: ${data}");
+      posts.add(Post(
+          name: data["creatorName"],
+          title: data["title"],
+          price: data["price"],
+          itemId: item["itemId"],
+          img: data['imgHash']));
+    }
+    // print(result);
+    return posts;
   }
 
   Future<List<Post>> getUserOwnedItems() async {

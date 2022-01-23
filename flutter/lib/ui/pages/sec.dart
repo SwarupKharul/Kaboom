@@ -1,6 +1,8 @@
 // ignore_for_file: unused_import, prefer_const_constructors, unnecessary_new, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:kaboom/core/models/post.dart';
+import 'package:kaboom/services/web3.dart';
 
 class second extends StatefulWidget {
   const second({Key? key}) : super(key: key);
@@ -11,9 +13,23 @@ class second extends StatefulWidget {
 
 class _secondState extends State<second> {
   int _index = 0;
-  List<String> _created = [];
-  List<String> _sold = [];
-  List<String> _bought = [];
+  List<Post> _created = [];
+  List<Post> _sold = [];
+  List<Post> _bought = [];
+  var web3 = Web3Service();
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    print("before");
+    //_bought = await web3.getUserOwnedItems();
+    print("after");
+    _created = await web3.getMarketItems();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,40 +55,13 @@ class _secondState extends State<second> {
               Expanded(
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: _created.length,
                   itemBuilder: (context, index) => Padding(
                     padding: EdgeInsets.all(10),
-                    child: SmallCard(height: 200),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-          height: 300,
-          // width: 300,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  "NFTs Sold",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.all(10),
-                    child: SmallCard(height: 200),
+                    child: SmallCard(
+                      height: 200,
+                      title: _created[index].img,
+                    ),
                   ),
                 ),
               )
@@ -99,10 +88,13 @@ class _secondState extends State<second> {
               Expanded(
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: _bought.length,
                   itemBuilder: (context, index) => Padding(
                     padding: EdgeInsets.all(10),
-                    child: SmallCard(height: 200),
+                    child: SmallCard(
+                      height: 200,
+                      title: _bought[index].img,
+                    ),
                   ),
                 ),
               )
@@ -131,7 +123,7 @@ class SmallCard extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(20))),
           color: Colors.blue,
           child: Image.network(
-            'https://static.vecteezy.com/packs/media/components/global/search-explore-nav/img/vectors/term-bg-1-666de2d941529c25aa511dc18d727160.jpg',
+            "https://dweb.link/ipfs/$title",
             fit: BoxFit.cover,
           )),
     );
