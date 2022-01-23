@@ -61,6 +61,8 @@ Kaboom is a blockchain-based comic/digital media creation app wherein the user c
 
 * [Solidity](https://docs.soliditylang.org/en/v0.8.11/)
 * [Hardhat](https://hardhat.org/)
+* [IPFS](https://ipfs.io/)
+* [Polygon](https://polygon.technology/)
 * [Flutter](https://flutter.dev/)
 * [Deep AI : Neural Style Transfer API](https://deepai.org/machine-learning-model/fast-style-transfer)
 
