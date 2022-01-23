@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
   String nftMarketAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
   String nftMarketContractName = 'NFTMarket';
 
-  String ethereumClientUrl = 'http://localhost:8545';
+  String ethereumClientUrl = 'https://rpc-mumbai.matic.today';
 
   // function to query
   Future<List<dynamic>> query(String functionName, List<dynamic> args) async {

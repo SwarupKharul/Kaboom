@@ -7,18 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaboom/core/services/imageService.dart';
-import 'package:kaboom/services/web3.dart';
 import 'package:kaboom/ipfs/ipfs.wrapper.dart';
+import 'package:kaboom/services/web3.dart';
 
-class CreateComic extends StatefulWidget {
-  const CreateComic({Key? key, required this.func}) : super(key: key);
+class CreateComic2 extends StatefulWidget {
+  const CreateComic2({Key? key, required this.func}) : super(key: key);
+
   final func;
 
   @override
-  State<CreateComic> createState() => _CreateComicState();
+  State<CreateComic2> createState() => _CreateComic2State();
 }
 
-class _CreateComicState extends State<CreateComic> {
+class _CreateComic2State extends State<CreateComic2> {
   List<String> _imagepaths = [" ", " ", " ", " "];
   List<String> _dialogues = [" ", " ", " ", " "];
   int _dialogueCounter = 0;
@@ -26,16 +27,17 @@ class _CreateComicState extends State<CreateComic> {
   TextEditingController _namecontroller = TextEditingController();
   TextEditingController _titlecontroller = TextEditingController();
   TextEditingController _pricecontroller = TextEditingController();
+
   bool _busy = false;
+
+  var web3 = Web3Service();
+  var ipfs = IPFS();
 
   ImageService _image = ImageService();
 
   ImagePicker _picker = ImagePicker();
 
   GlobalKey _globalKey = new GlobalKey();
-
-  var web3 = Web3Service();
-  var ipfs = IPFS();
 
   Future<void> addImage(int index) async {
     setState(() {
@@ -79,7 +81,6 @@ class _CreateComicState extends State<CreateComic> {
   // fetch all items by fetchMyNFTs
   Future<String?> createMarketItem(
       {required double price, required String ipfsHash}) async {
-        
     final nftToken = await web3.createToken(tokenURI: ipfsHash);
     web3.nft.transferEvents().toString();
     getTokenId();
@@ -215,7 +216,7 @@ class _CreateComicState extends State<CreateComic> {
                                               fit: BoxFit.cover,
                                               height:
                                                   constraints.maxHeight * 0.6,
-                                              width: constraints.maxWidth * 0.6,
+                                              width: constraints.maxWidth,
                                             ),
                                             if (_dialogues[0] != " ")
                                               Positioned(
@@ -244,15 +245,15 @@ class _CreateComicState extends State<CreateComic> {
                                                       ),
                                                       width:
                                                           constraints.maxWidth *
-                                                              0.4,
+                                                              0.6,
                                                     ),
                                                   ))
                                           ],
                                         ),
                                 )),
                             Positioned(
-                                top: 0,
-                                left: 0.4 * constraints.maxWidth,
+                                top: 0.4 * constraints.maxHeight,
+                                left: 0,
                                 child: ClipPath(
                                   clipper: secondImageClipper(
                                       height: constraints.maxHeight,
@@ -265,12 +266,12 @@ class _CreateComicState extends State<CreateComic> {
                                               _imagepaths[1],
                                               fit: BoxFit.cover,
                                               height:
-                                                  constraints.maxHeight * 0.48,
-                                              width: constraints.maxWidth * 0.6,
+                                                  constraints.maxHeight * 0.6,
+                                              width: constraints.maxWidth,
                                             ),
                                             if (_dialogues[1] != " ")
                                               Positioned(
-                                                  bottom: 50,
+                                                  bottom: 0,
                                                   right: 0,
                                                   child: Card(
                                                     shape:
@@ -296,112 +297,7 @@ class _CreateComicState extends State<CreateComic> {
                                                       ),
                                                       width:
                                                           constraints.maxWidth *
-                                                              0.4,
-                                                    ),
-                                                  ))
-                                          ],
-                                        ),
-                                )),
-                            Positioned(
-                                top: 0.51 * constraints.maxHeight,
-                                left: 0,
-                                child: ClipPath(
-                                  clipper: thirdImageClipper(
-                                      height: constraints.maxHeight,
-                                      width: constraints.maxWidth),
-                                  child: (_imagepaths[2] == " ")
-                                      ? Container()
-                                      : Stack(
-                                          children: [
-                                            Image.network(
-                                              _imagepaths[2],
-                                              fit: BoxFit.cover,
-                                              height:
-                                                  constraints.maxHeight * 0.49,
-                                              width:
-                                                  constraints.maxWidth * 0.45,
-                                            ),
-                                            if (_dialogues[2] != " ")
-                                              Positioned(
-                                                  top: 30,
-                                                  right: 0,
-                                                  child: Card(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  10),
-                                                            ),
-                                                            side: BorderSide(
-                                                                width: 5)),
-                                                    child: Container(
-                                                      //height: 100,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 10,
-                                                                horizontal: 15),
-                                                        child:
-                                                            Text(_dialogues[2]),
-                                                      ),
-                                                      width:
-                                                          constraints.maxWidth *
-                                                              0.3,
-                                                    ),
-                                                  ))
-                                          ],
-                                        ),
-                                )),
-                            Positioned(
-                                top: 0.4 * constraints.maxHeight,
-                                left: 0.35 * constraints.maxWidth,
-                                child: ClipPath(
-                                  clipper: fourthImageClipper(
-                                      height: constraints.maxHeight,
-                                      width: constraints.maxWidth),
-                                  child: (_imagepaths[3] == " ")
-                                      ? Container()
-                                      : Stack(
-                                          children: [
-                                            Image.network(
-                                              _imagepaths[3],
-                                              fit: BoxFit.cover,
-                                              height:
-                                                  constraints.maxHeight * 0.6,
-                                              width:
-                                                  constraints.maxWidth * 0.65,
-                                            ),
-                                            if (_dialogues[3] != " ")
-                                              Positioned(
-                                                  bottom: 0,
-                                                  child: Card(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  10),
-                                                            ),
-                                                            side: BorderSide(
-                                                                width: 5)),
-                                                    child: Container(
-                                                      //height: 100,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 10,
-                                                                horizontal: 15),
-                                                        child:
-                                                            Text(_dialogues[3]),
-                                                      ),
-                                                      width:
-                                                          constraints.maxWidth *
-                                                              0.65,
+                                                              0.6,
                                                     ),
                                                   ))
                                           ],
@@ -410,7 +306,7 @@ class _CreateComicState extends State<CreateComic> {
                             if (_imagepaths[0] == " ")
                               Positioned(
                                   top: constraints.maxHeight * 0.25,
-                                  left: constraints.maxWidth * 0.25,
+                                  left: constraints.maxWidth * 0.50,
                                   child: IconButton(
                                     icon: Icon(Icons.add_circle,
                                         color: Colors.amber),
@@ -421,37 +317,13 @@ class _CreateComicState extends State<CreateComic> {
                                   )),
                             if (_imagepaths[1] == " ")
                               Positioned(
-                                  top: constraints.maxHeight * 0.20,
-                                  left: constraints.maxWidth * 0.70,
+                                  top: constraints.maxHeight * 0.70,
+                                  left: constraints.maxWidth * 0.50,
                                   child: IconButton(
                                     icon: Icon(Icons.add_circle,
                                         color: Colors.amber),
                                     onPressed: () async {
                                       await addImage(1);
-                                      setState(() {});
-                                    },
-                                  )),
-                            if (_imagepaths[2] == " ")
-                              Positioned(
-                                  top: constraints.maxHeight * 0.75,
-                                  left: constraints.maxWidth * 0.15,
-                                  child: IconButton(
-                                    icon: Icon(Icons.add_circle,
-                                        color: Colors.amber),
-                                    onPressed: () async {
-                                      await addImage(2);
-                                      setState(() {});
-                                    },
-                                  )),
-                            if (_imagepaths[3] == " ")
-                              Positioned(
-                                  top: constraints.maxHeight * 0.70,
-                                  left: constraints.maxWidth * 0.65,
-                                  child: IconButton(
-                                    icon: Icon(Icons.add_circle,
-                                        color: Colors.amber),
-                                    onPressed: () async {
-                                      await addImage(3);
                                       setState(() {});
                                     },
                                   )),
@@ -532,7 +404,7 @@ class _CreateComicState extends State<CreateComic> {
                                                         _controller.text;
                                                     _controller.text = "";
                                                     _dialogueCounter += 1;
-                                                    _dialogueCounter %= 4;
+                                                    _dialogueCounter %= 2;
                                                     setState(() {});
                                                     Navigator.of(context).pop();
                                                   },
@@ -568,9 +440,7 @@ class _CreateComicState extends State<CreateComic> {
                     Column(
                       children: [
                         IconButton(
-                            onPressed: () {
-                              _publish();
-                            },
+                            onPressed: () {},
                             icon: Icon(
                               Icons.arrow_forward_rounded,
                               color: Colors.amber,
@@ -598,16 +468,8 @@ class myPainter extends CustomPainter {
       ..strokeWidth = 10.0;
 
     //middle line
-    canvas.drawLine(Offset(-2, 0.6 * size.height),
-        Offset(size.width + 2, 0.4 * size.height), paint);
-
-    //top vertical line
-    canvas.drawLine(Offset(0.4 * size.width, -2),
-        Offset(0.6 * size.width, 0.48 * size.height), paint);
-
-    //bottom line
-    canvas.drawLine(Offset(0.35 * size.width, size.height + 2),
-        Offset(0.45 * size.width, 0.51 * size.height), paint);
+    canvas.drawLine(Offset(-2, 0.4 * size.height),
+        Offset(size.width + 2, 0.6 * size.height), paint);
   }
 
   @override
@@ -623,9 +485,9 @@ class firstImageClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(width * 0.4 - 5, 0);
-    path.lineTo(0.6 * width - 5, 0.48 * height - 5);
-    path.lineTo(0, height * 0.6 - 5);
+    path.lineTo(width, 0);
+    path.lineTo(width, 0.6 * height - 5);
+    path.lineTo(0, height * 0.4 - 5);
     path.close();
     return path;
   }
@@ -643,52 +505,10 @@ class secondImageClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.moveTo(5, 0);
-    path.lineTo(size.width + 0, 0);
-    path.lineTo(size.width, 0.4 * height - 5);
-    path.lineTo(size.width - (0.4 * width - 5), height * 0.48 - 5);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
-
-class thirdImageClipper extends CustomClipper<Path> {
-  thirdImageClipper({required this.height, required this.width});
-  final double height;
-  final double width;
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.moveTo(0, 5 + 0.6 * height - 0.51 * height);
-    path.lineTo(size.width - 5, 5);
-    path.lineTo(width * 0.35 - 5, size.height);
+    path.moveTo(0, 5);
     path.lineTo(0, size.height);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}
-
-class fourthImageClipper extends CustomClipper<Path> {
-  fourthImageClipper({required this.height, required this.width});
-  final double height;
-  final double width;
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.moveTo(0.1 * width, 0.09 * height + 15);
-    path.lineTo(size.width, 0 + 5);
     path.lineTo(size.width, size.height);
-    path.lineTo(5, size.height);
+    path.lineTo(size.width, height * 0.2 + 5);
     path.close();
     return path;
   }

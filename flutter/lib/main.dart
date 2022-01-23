@@ -8,7 +8,9 @@ import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaboom/core/services/imageService.dart';
 import 'package:kaboom/ui/pages/create_comic.dart';
+import 'package:kaboom/ui/pages/create_comic2.dart';
 import 'package:kaboom/ui/pages/feed.dart';
+import 'package:kaboom/ui/pages/sec.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,6 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    _create = [
+      CreateComic(func: changeCreate),
+      CreateComic2(func: changeCreate)
+    ];
     _controller.addListener(() {
       if (_index != _controller.page!.round()) {
         setState(() {
@@ -126,6 +132,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  late List<Widget> _create;
+  int _currentCreate = 0;
+  void changeCreate() {
+    setState(() {
+      _currentCreate += 1;
+      _currentCreate %= 2;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,8 +150,8 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: _controller,
         children: [
           Feed(),
-          CreateComic(),
-          Center(child: Text("prof")),
+          _create[_currentCreate],
+          second(),
         ],
       ),
       bottomNavigationBar: _bottomNavBar(_index),

@@ -4,10 +4,12 @@ class Post {
       required this.title,
       required this.price,
       required this.img,
-      required this.itemId});
+      required this.itemId,
+      this.like = false});
   String name;
   String title;
   String price;
   BigInt itemId;
   String img;
+  bool like;
 }
