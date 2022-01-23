@@ -440,7 +440,9 @@ class _CreateComic2State extends State<CreateComic2> {
                     Column(
                       children: [
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _publish();
+                            },
                             icon: Icon(
                               Icons.arrow_forward_rounded,
                               color: Colors.amber,
