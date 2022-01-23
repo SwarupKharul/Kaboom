@@ -44,30 +44,61 @@
 <br>
 
 
+## 🧐 Objective 
+People who wish to pursue comic/digital art creation as a career don't have any platform to showcase their skills and earn money. Kaboom gives the way to have a stand of yourself. This application also strives to bring back comics to the spotlight by digitizing them and incorporating them into the future vision of the metaverse.
 
-
+<br>
+<br>
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## ⚒️ About The Project
 
-
-Kaboom is a blockchain-based comic/digital media creation app wherein the user can create comics using our comic/media generation tools which allows you to select the layout and converts your uploaded images to comic style using neural style transfer and provides you with editing features to create your masterpiece and store them using IPFS. You can also publish your comics on the marketplace in form of NFTs where others can like, comment as well as buy it against Ethereum coins.  This serves to empower people who wish to pursue comic/digital art creation as a career by providing them with a place to demonstrate their skills while also earning money. This platform also targets the NFT collectors’ community looking to expand their collection. The main aim is to bring the magic and joy of comic culture to the main stream and give creators their stand in society.
+Kaboom is a blockchain based comic app where a content creator can generate new comics according to his imagination and sell them in marketplace using cryptocurrency. People who wants to opt comic creation as their way of living can get a platform to showcase their talent and as well as earn money for their hardwork.
 
 
 <br>
+<br>
 
-## Built With
+## 🙌🏻 Novelty of our project
+ - Kaboom enables users to convert their images to comic style using neural style transfer.
+ - Comics generated are stored using Inter Planetary File System (IPFS).
+ - Application is developed using Flutter, hence its compatible with both Android as well as IOS.
+ - All transactions are facilitated through Ethereum Block-chain.
+This application fits into the future vision of the metaverse.
 
-* [Solidity](https://docs.soliditylang.org/en/v0.8.11/)
-* [Hardhat](https://hardhat.org/)
+<br>
+<br>
+
+## 👩🏻‍💻Tech Stack
+
+* [Solidity](https://docs.soliditylang.org/en/v0.8.11/) 
+* [Hardhat](https://hardhat.org/) 
+* [IPFS](https://ipfs.io/)
+* [Polygon](https://polygon.technology/)
 * [Flutter](https://flutter.dev/)
 * [Deep AI : Neural Style Transfer API](https://deepai.org/machine-learning-model/fast-style-transfer)
 
+
+| | | | |
+|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|
+|<a href="https://hardhat.org/" target="_blank"> <img src="images\Hardhat.png" alt="django" width="100" height="100"/> </a>|<a href="https://docs.soliditylang.org/en/v0.8.11/" target="_blank"> <img src="images\Solidity.png" alt="opencv" width="150" height="70"/> </a>| <a href="https://ipfs.io/" target="_blank"> <img src="images\IPFS.png" alt="Mediapipe" width="190" height="80"/> </a>| <a href="https://polygon.technology/" target="_blank"><img src="images\Polygon.png" alt="bootstrap" width="150" height="100" /></a>|
+
+<br>
 <br>
 
 
-## Contributors
+## ✨ Future Scope
+ - Can be used as Trading Platform
+ - Can help creators to bid their comics
+ - Can add option for industries to hire creators
+ - Giving User the choice to make the payment with any cryptocurrency instead of being just limited to Ethereum
+ - Can provide bidding system for exclusive NFTs
+
+<br>
+<br>
+
+## 👫 Contributors 
 
 * [Swarup Kharul](https://github.com/SwarupKharul)
 * [Suryakant Aggarwal](https://github.com/suryaa62)
