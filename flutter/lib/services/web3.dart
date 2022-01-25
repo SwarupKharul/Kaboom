@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:kaboom/core/models/post.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:kaboom/ipfs/ipfs.wrapper.dart';
+import 'package:web_socket_channel/io.dart';
 
 var ipfs = IPFS();
 
@@ -13,6 +14,7 @@ class Web3Service {
   late Client httpClient;
   late Web3Client ethClient;
   String rpcUrl = 'http://10.0.2.2:8545';
+  String wsUrl = 'ws://localhost:8545';
   String nftStorageUrl = 'ipfs.dweb.link/';
 
   final marketContractAddress =
@@ -74,11 +76,15 @@ class Web3Service {
   }
 
   Future<String> buyNft({required BigInt itemId, required BigInt price}) async {
+    final client = Web3Client(rpcUrl, Client(), socketConnector: () {
+      return IOWebSocketChannel.connect(wsUrl).cast<String>();
+    });
     final txHash = await market.createMarketSale(nftContractAddress, itemId,
         credentials: credentials,
         transaction: Transaction(
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: 100000,
           value: EtherAmount.fromUnitAndValue(EtherUnit.ether, price),
-          //gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0),
         ));
     return txHash;
   }

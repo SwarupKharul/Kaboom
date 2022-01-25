@@ -29,6 +29,7 @@ class _secondState extends State<second> {
     //_bought = await web3.getUserOwnedItems();
     print("after");
     _created = await web3.getMarketItems();
+    setState(() {});
   }
 
   @override
