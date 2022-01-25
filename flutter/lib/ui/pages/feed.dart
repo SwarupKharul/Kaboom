@@ -98,6 +98,11 @@ class _FeedState extends State<Feed> {
                     child: Image.network(
                       "https://dweb.link/ipfs/$img",
                       fit: BoxFit.fill,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress?.cumulativeBytesLoaded ==
+                            loadingProgress?.expectedTotalBytes) return child;
+                        return CircularProgressIndicator();
+                      },
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
