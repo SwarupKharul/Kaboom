@@ -98,10 +98,31 @@ This application fits into the future vision of the metaverse.
 <br>
 <br>
 
+## ✨ Screenshots
+
+![sss1](https://user-images.githubusercontent.com/72617587/151703394-9cbeab8f-ab56-4f1f-9f2e-aa4e4ffc4a3f.jpeg)
+![sss2](https://user-images.githubusercontent.com/72617587/151703418-a1f8ea85-3343-4779-9fef-3a482d051ebc.jpeg)
+![sss3](https://user-images.githubusercontent.com/72617587/151703427-4386038f-94b5-4d5d-aaea-ab1bb8eff9c5.jpeg)
+
+
+<br>
+<br>
+
+## ✨ Achievement
+
+* Runner Up in OSDC hack 2022
+
+<br>
+<br>
+
 ## 👫 Contributors 
 
 * [Swarup Kharul](https://github.com/SwarupKharul)
 * [Suryakant Aggarwal](https://github.com/suryaa62)
 * [Vineet Raj](https://github.com/vinmik)
 * [Vanshika Nehra](https://github.com/VanshikaNehra23)
+
+<br>
+<br>
+
 
