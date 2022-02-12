@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:kaboom/core/models/post.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:kaboom/ipfs/ipfs.wrapper.dart';
+import 'package:web_socket_channel/io.dart';
 
 var ipfs = IPFS();
 
@@ -13,6 +14,7 @@ class Web3Service {
   late Client httpClient;
   late Web3Client ethClient;
   String rpcUrl = 'http://10.0.2.2:8545';
+  String wsUrl = 'ws://localhost:8545';
   String nftStorageUrl = 'ipfs.dweb.link/';
 
   final marketContractAddress =
@@ -23,7 +25,7 @@ class Web3Service {
   late Market market;
   late NFT nft;
   late Credentials credentials = EthPrivateKey.fromHex(
-      "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba");
+      "0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1");
 
   Web3Service() {
     httpClient = Client();
@@ -52,6 +54,8 @@ class Web3Service {
   Future<String> createMarketItem(
       {required BigInt tokenId, required BigInt price}) async {
     final listingPrice = await market.getListingPrice();
+    print("Inside createMarketItem");
+    print("listingPrice: $price");
     final item = await market.createMarketItem(
       nftContractAddress,
       tokenId,
@@ -77,9 +81,10 @@ class Web3Service {
     final txHash = await market.createMarketSale(nftContractAddress, itemId,
         credentials: credentials,
         transaction: Transaction(
-          value: EtherAmount.fromUnitAndValue(EtherUnit.ether, price),
-          //gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0),
+          maxGas: 10000000,
+          value: EtherAmount.fromUnitAndValue(EtherUnit.wei, price),
         ));
+    print("txHash: $txHash");
     return txHash;
   }
 
@@ -121,7 +126,9 @@ class Web3Service {
     final List<dynamic> items = [];
     final List<Post> posts = [];
     final address = await credentials.extractAddress();
+    print('address: $address');
     final result = await market.fetchMyNFTs(address);
+    print("result: $result");
 
     for (var item in result) {
       items.add({

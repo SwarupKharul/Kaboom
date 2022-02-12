@@ -79,7 +79,6 @@ class _CreateComicState extends State<CreateComic> {
   // fetch all items by fetchMyNFTs
   Future<String?> createMarketItem(
       {required double price, required String ipfsHash}) async {
-        
     final nftToken = await web3.createToken(tokenURI: ipfsHash);
     web3.nft.transferEvents().toString();
     getTokenId();
@@ -142,26 +141,48 @@ class _CreateComicState extends State<CreateComic> {
                       )),
                   ElevatedButton(
                       onPressed: () async {
-                        var bytes = await _capturePng();
-                        var res = await ipfs.addData(
-                          bytes,
-                          int.parse(_pricecontroller.text),
-                          _titlecontroller.text,
-                          _namecontroller.text,
-                        );
-                        // print(res);
-                        createMarketItem(
-                            price: double.parse(
-                              _pricecontroller.text,
-                            ),
-                            ipfsHash: res['Hash']);
+                        try {
+                          setState(() {
+                            _busy = true;
+                          });
+                          var bytes = await _capturePng();
+                          var res = await ipfs.addData(
+                            bytes,
+                            int.parse(_pricecontroller.text),
+                            _titlecontroller.text,
+                            _namecontroller.text,
+                          );
+                          // print(res);
+                          await createMarketItem(
+                              price: double.parse(
+                                _pricecontroller.text,
+                              ),
+                              ipfsHash: res['Hash']);
 
-                        // ipfs.add(
-                        //     bytes,
-                        //     _namecontroller.text,
-                        //     int.parse(_pricecontroller.text),
-                        //     _titlecontroller.text);
+                          // ipfs.add(
+                          //     bytes,
+                          //     _namecontroller.text,
+                          //     int.parse(_pricecontroller.text),
+                          //     _titlecontroller.text);
 
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Comic created"),
+                            backgroundColor: Colors.green,
+                          ));
+                          setState(() {
+                            _busy = false;
+                          });
+                        } catch (e) {
+                          print(e.toString());
+
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("An error occured"),
+                            backgroundColor: Colors.red,
+                          ));
+                          setState(() {
+                            _busy = false;
+                          });
+                        }
                         Navigator.of(context).pop();
                       },
                       style: ButtonStyle(

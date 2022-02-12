@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class ImageService {
-  String API_KEY = '2f4c0e9e-2aa3-4f05-a9d7-241660913d4a';
+  String API_KEY = 'e7764c0c-d69f-4f8c-8f7a-112bed5e5472';
 
   Future<void> cartoonify(String url_con) async {
     var url = Uri.parse('https://api.deepai.org/api/fast-style-transfer');
