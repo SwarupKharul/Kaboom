@@ -126,10 +126,10 @@ class _FeedState extends State<Feed> {
                             web3.buyNft(
                                 itemId: itemId,
                                 price: BigInt.from(int.parse(price)));
-                            // Future.delayed(Duration(seconds: 3)).then((value) {
-                            //   _posts.removeAt(index);
-                            //   setState(() {});
-                            // });
+                            Future.delayed(Duration(seconds: 3)).then((value) {
+                              _posts.removeAt(index);
+                              setState(() {});
+                            });
                           },
                           child: Text("Buy ${price}"),
                           style: ButtonStyle(

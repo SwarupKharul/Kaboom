@@ -141,7 +141,6 @@ class _CreateComicState extends State<CreateComic> {
                       )),
                   ElevatedButton(
                       onPressed: () async {
-                        Navigator.of(context).pop();
                         try {
                           setState(() {
                             _busy = true;
@@ -174,6 +173,8 @@ class _CreateComicState extends State<CreateComic> {
                             _busy = false;
                           });
                         } catch (e) {
+                          print(e.toString());
+
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("An error occured"),
                             backgroundColor: Colors.red,
@@ -182,6 +183,7 @@ class _CreateComicState extends State<CreateComic> {
                             _busy = false;
                           });
                         }
+                        Navigator.of(context).pop();
                       },
                       style: ButtonStyle(
                           backgroundColor:

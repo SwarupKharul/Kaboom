@@ -25,7 +25,7 @@ class Web3Service {
   late Market market;
   late NFT nft;
   late Credentials credentials = EthPrivateKey.fromHex(
-      "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba");
+      "0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1");
 
   Web3Service() {
     httpClient = Client();
@@ -54,6 +54,8 @@ class Web3Service {
   Future<String> createMarketItem(
       {required BigInt tokenId, required BigInt price}) async {
     final listingPrice = await market.getListingPrice();
+    print("Inside createMarketItem");
+    print("listingPrice: $price");
     final item = await market.createMarketItem(
       nftContractAddress,
       tokenId,
@@ -76,16 +78,13 @@ class Web3Service {
   }
 
   Future<String> buyNft({required BigInt itemId, required BigInt price}) async {
-    final client = Web3Client(rpcUrl, Client(), socketConnector: () {
-      return IOWebSocketChannel.connect(wsUrl).cast<String>();
-    });
     final txHash = await market.createMarketSale(nftContractAddress, itemId,
         credentials: credentials,
         transaction: Transaction(
-          gasPrice: EtherAmount.inWei(BigInt.one),
-          maxGas: 100000,
-          value: EtherAmount.fromUnitAndValue(EtherUnit.ether, price),
+          maxGas: 10000000,
+          value: EtherAmount.fromUnitAndValue(EtherUnit.wei, price),
         ));
+    print("txHash: $txHash");
     return txHash;
   }
 
@@ -127,7 +126,9 @@ class Web3Service {
     final List<dynamic> items = [];
     final List<Post> posts = [];
     final address = await credentials.extractAddress();
+    print('address: $address');
     final result = await market.fetchMyNFTs(address);
+    print("result: $result");
 
     for (var item in result) {
       items.add({

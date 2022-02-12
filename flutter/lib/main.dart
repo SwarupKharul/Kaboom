@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   AppBar _appbar(int index) {
-    List<String> _pagetitles = ['Kaboom', 'New Comic', 'Profile'];
+    List<String> _pagetitles = ['Mint', 'New Comic', 'Profile'];
     return AppBar(
       title: Text(
         _pagetitles[index],
